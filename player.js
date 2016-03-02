@@ -6,6 +6,54 @@ exports = module.exports = {
         return a === b;
     },
 
+    commonCardsOccurency : function(a) {
+        var occurencyCount = 0;
+
+        for(var i = 0; i < this.globals.commonCards.length; i++) {
+            if(a === this.globals.commonCards[i].rank) {
+                occurencyCount ++;
+            }
+        }
+
+        return occurencyCount;
+    },
+
+    haveCouple : function() {
+
+    },
+
+    isTris: function() {
+        if( this.isCouple(this.globals.firstCard, this.globals.secondCard) && this.commonCardsOccurency(this.globals.firstCard) >= 1) {
+            return true;
+        }
+
+        if(this.commonCardsOccurency(this.globals.firstCard >= 2)) {
+            return true;
+        }
+
+        if(this.commonCardsOccurency(this.globals.secondCard >= 2)) {
+            return true;
+        }
+
+        return false;
+    },
+
+    isPoker: function() {
+        if( this.isCouple(this.globals.firstCard, this.globals.secondCard) && this.commonCardsOccurency(this.globals.firstCard) >= 2) {
+            return true;
+        }
+
+        if(this.commonCardsOccurency(this.globals.firstCard >= 3)) {
+            return true;
+        }
+
+        if(this.commonCardsOccurency(this.globals.secondCard >= 3)) {
+            return true;
+        }
+
+        return false;
+    },
+
     isAssoKappa : function(a, b) {
         return ( (a === 'A') && (b === 'K') ) || ( (a === 'K') && (b === 'A') )
     },
@@ -41,19 +89,19 @@ exports = module.exports = {
     },
 
     isPreFlop : function() {
-        return true;
+        return this.globals.commonCards.length < 3;
     },
 
     isFlop : function() {
-        return this.globals.commonCards.length === 3;
+        return this.globals.commonCards.length >= 3;
     },
 
     isTurn : function() {
-        return this.globals.commonCards.lenght === 4;
+        return this.globals.commonCards.length === 4;
     },
 
     isRiver : function() {
-        return this.globals.commonCards.lenght === 5;
+        return this.globals.commonCards.length === 5;
     },
 
     isSuited: function(suitA, suitB) {
@@ -95,7 +143,9 @@ exports = module.exports = {
             return bet(this.preflopBet());
         }
 
-
+        if(this.isFlop()) {
+            return bet(this.flopBet());
+        }
     },
 
     preflopBet : function() {
@@ -121,6 +171,22 @@ exports = module.exports = {
 
         // CheckOrFold tutto il resto
         return 0;
+    },
+
+    flopBet : function() {
+        //poker all in;
+        if(this.isPoker()) {
+            return this.globals.allInAmount;
+        }
+        //full all in;
+        //colore all in
+
+        // tris * 3
+        if(this.isTris()) {
+            return this.globals.call * 3;
+        }
+
+        return this.globals.call;
     }
 
 };
