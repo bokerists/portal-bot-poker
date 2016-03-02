@@ -1,0 +1,13 @@
+{
+  "name": "bot-player",
+  "version": "1.0.0",
+  "description": "Texas hold'em poker bot player",
+  "main": "server.js",
+  "dependencies": {
+    "express": "4.13.3",
+    "body-parser": "1.14.1"
+  },
+  "scripts": {
+    "start": "node index"
+  }
+}
