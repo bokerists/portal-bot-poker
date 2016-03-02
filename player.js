@@ -40,8 +40,12 @@ exports = module.exports = {
         return (cardA >= cardB) ? cardA : cardB;
     },
 
+    isPreFlop : function() {
+        return true;
+    },
+
     isFlop : function() {
-        return this.globals.commonCards.length >= 3;
+        return this.globals.commonCards.length === 3;
     },
 
     isTurn : function() {
@@ -87,11 +91,11 @@ exports = module.exports = {
 
         this.initGlobals(gamestate);
 
-        if(this.isFlop()) {
+        if(this.isPreFlop()) {
             return bet(this.preflopBet());
         }
-        // CheckOrFold tutto il resto
-        return bet(0);
+
+
     },
 
     preflopBet : function() {
@@ -114,6 +118,9 @@ exports = module.exports = {
             if(this.betterThanOrEqual(this.max(this.globals.firstCard, this.globals.secondCard), '12'))
                 return this.globals.call * 3;
         }
+
+        // CheckOrFold tutto il resto
+        return 0;
     }
 
 };
