@@ -40,16 +40,16 @@ exports = module.exports = {
         return (cardA >= cardB) ? cardA : cardB;
     },
 
-    isFlop : function(cards) {
-        return cards.length === 3;
+    isFlop : function() {
+        return this.globals.commonCards.length >= 3;
     },
 
-    isTurn : function(cards) {
-        return cards.lenght === 4;
+    isTurn : function() {
+        return this.globals.commonCards.lenght === 4;
     },
 
-    isRiver : function(cards) {
-        return cards.lenght === 5;
+    isRiver : function() {
+        return this.globals.commonCards.lenght === 5;
     },
 
     isSuited: function(suitA, suitB) {
@@ -87,28 +87,33 @@ exports = module.exports = {
 
         this.initGlobals(gamestate);
 
+        if(this.isFlop()) {
+            return bet(this.preflopBet());
+        }
+        // CheckOrFold tutto il resto
+        return bet(0);
+    },
+
+    preflopBet : function() {
         // Vado allin con una coppia >= Q, altra coppia bet * 3
         if(this.isCouple(this.globals.firstCard, this.globals.secondCard)) {
             if(this.betterThanOrEqual(this.cardToNumber(this.globals.firstCard), '12'))
-                return bet(this.globals.allInAmount);
+                return return this.globals.allInAmount;
 
-            return bet(this.globals.call * 3);
+            return this.globals.call * 3;
         }
 
         // Vado allin con AssoKappa
         if(this.isAssoKappa(this.globals.firstCard, this.globals.secondCard)) {
-            return bet(this.globals.call * 3);
+            return this.globals.call * 3;
         }
 
         // Bet * 3 con connector-suited > JQ
         // Call con connector-suited inferiori
         if(this.isConnected(this.cardToNumber(this.globals.firstCard), this.cardToNumber(this.globals.secondCard)) && this.isSuited(this.globals.firstSuit, this.globals.secondSuit)) {
             if(this.betterThanOrEqual(this.max(this.globals.firstCard, this.globals.secondCard), '12'))
-                return bet(this.globals.call * 3);
+                return this.globals.call * 3;
         }
-
-        // CheckOrFold tutto il resto
-        return bet(0);
     }
 
 };
