@@ -97,7 +97,7 @@ exports = module.exports = {
 
         // Vado allin con AssoKappa
         if(this.isAssoKappa(this.globals.firstCard, this.globals.secondCard)) {
-            return bet(this.globals.allInAmount);
+            return bet(this.globals.call * 3);
         }
 
         // Bet * 3 con connector-suited > JQ
