@@ -189,7 +189,7 @@ exports = module.exports = {
             return this.globals.betAmount * 3;
         }
 
-        return this.globals.betAmount;
+        return this.globals.callAmount;
     }
 
 };
