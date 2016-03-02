@@ -119,10 +119,12 @@ exports = module.exports = {
         secondSuit : "",
         pot : "",
         commonCards : "",
-        call : ""
+        call : "",
+        sb : ""
     },
 
     initGlobals : function(gamestate) {
+        this.globals.sb = gamestate.sb;
         this.globals.me = gamestate.me;
         this.globals.myCards = gamestate.players[this.globals.me].cards;
         this.globals.firstCard = this.globals.myCards.myCards[0].rank;
@@ -130,7 +132,8 @@ exports = module.exports = {
         this.globals.secondCard = this.globals.myCards.myCards[1].rank;
         this.globals.secondSuit = this.globals.myCards.myCards[1].type;
         this.globals.pot = gamestate.pot;
-        this.globals.call = gamestate.callAmount;
+        this.globals.callAmount = gamestate.callAmount;
+        this.globals.betAmount = (this.globals.callAmount != 0) ? this.globals.callAmount : (this.globals.sb * 2);
         this.globals.commonCards = gamestate.commonCards;
         this.globals.allInAmount = Infinity;
     },
@@ -154,19 +157,19 @@ exports = module.exports = {
             if(this.betterThanOrEqual(this.cardToNumber(this.globals.firstCard), '12'))
                 return return this.globals.allInAmount;
 
-            return this.globals.call * 3;
+            return this.globals.betAmount * 3;
         }
 
         // Vado allin con AssoKappa
         if(this.isAssoKappa(this.globals.firstCard, this.globals.secondCard)) {
-            return this.globals.call * 3;
+            return this.globals.betAmount * 3;
         }
 
         // Bet * 3 con connector-suited > JQ
         // Call con connector-suited inferiori
         if(this.isConnected(this.cardToNumber(this.globals.firstCard), this.cardToNumber(this.globals.secondCard)) && this.isSuited(this.globals.firstSuit, this.globals.secondSuit)) {
             if(this.betterThanOrEqual(this.max(this.globals.firstCard, this.globals.secondCard), '12'))
-                return this.globals.call * 3;
+                return this.globals.betAmount * 3;
         }
 
         // CheckOrFold tutto il resto
@@ -183,10 +186,10 @@ exports = module.exports = {
 
         // tris * 3
         if(this.isTris()) {
-            return this.globals.call * 3;
+            return this.globals.betAmount * 3;
         }
 
-        return this.globals.call;
+        return this.globals.betAmount;
     }
 
 };
