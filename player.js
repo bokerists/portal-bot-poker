@@ -67,8 +67,6 @@ exports = module.exports = {
     },
 
     isFlush : function() {
-        var isFlush = false;
-
         if(this.isSuited(this.globals.firstSuit, this.globals.secondSuit) && this.suitOccurrencyCount(this.globals.firstSuit) >= 2) {
             return true;
         }
@@ -81,7 +79,7 @@ exports = module.exports = {
             return true;
         }
 
-        return isFlush;
+        return false;
     },
 
     isAssoKappa : function(a, b) {
