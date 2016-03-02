@@ -40,49 +40,71 @@ exports = module.exports = {
         return (cardA >= cardB) ? cardA : cardB;
     },
 
+    isFlop : function(cards) {
+        return cards.length === 3;
+    },
+
+    isTurn : function(cards) {
+        return cards.lenght === 4;
+    },
+
+    isRiver : function(cards) {
+        return cards.lenght === 5;
+    },
+
     isSuited: function(suitA, suitB) {
         return suitA === suitB;
     },
 
-    initGlobals: function(gamestate) {
-        // TODO
+
+    globals : {
+        allInAmount : Infinity,
+        me : "",
+        myCards : "",
+        firstCard : "",
+        firstSuit : "",
+        secondCard : "",
+        secondSuit : "",
+        pot : "",
+        commonCards : "",
+        call : ""
+    },
+
+    initGlobals : function(gamestate) {
+        this.globals.me = gamestate.me;
+        this.globals.myCards = gamestate.players[this.globals.me].cards;
+        this.globals.firstCard = this.globals.myCards.myCards[0].rank;
+        this.globals.firstSuit = this.globals.myCards.myCards[0].type;
+        this.globals.secondCard = this.globals.myCards.myCards[1].rank;
+        this.globals.secondSuit = this.globals.myCards.myCards[1].type;
+        this.globals.pot = gamestate.pot;
+        this.globals.call = gamestate.callAmount;
+        this.globals.commonCards = gamestate.commonCards;
+        this.globals.allInAmount = Infinity;
     },
 
     bet: function (gamestate, bet) {
 
         this.initGlobals(gamestate);
 
-        var allInAmount = 10000000;
-        var me = gamestate.me;
-
-        var myCards = gamestate.players[me].cards;
-        var firstCard = myCards[0].rank;
-        var firstSuit = myCards[0].type;
-        var secondCard = myCards[1].rank;
-        var secondSuit = myCards[1].type;
-        var pot = gamestate.pot;
-        var call = gamestate.callAmount;
-
         // Vado allin con una coppia >= Q, altra coppia bet * 3
-        if(this.isCouple(firstCard, secondCard)) {
-            if(this.betterThanOrEqual(this.cardToNumber(firstCard), '12'))
-                return bet(allInAmount);
+        if(this.isCouple(this.globals.firstCard, this.globals.secondCard)) {
+            if(this.betterThanOrEqual(this.cardToNumber(this.globals.firstCard), '12'))
+                return bet(this.globals.allInAmount);
 
-            return bet(call * 3);
+            return bet(this.globals.call * 3);
         }
 
         // Vado allin con AssoKappa
-        if(this.isAssoKappa(firstCard, secondCard)) {
-            return bet(allInAmount);
+        if(this.isAssoKappa(this.globals.firstCard, this.globals.secondCard)) {
+            return bet(this.globals.allInAmount);
         }
 
         // Bet * 3 con connector-suited > JQ
         // Call con connector-suited inferiori
-        if(this.isConnected(this.cardToNumber(firstCard), this.cardToNumber(secondCard)) && this.isSuited(firstSuit, secondSuit)) {
-            if(this.betterThanOrEqual(this.max(firstCard, secondCard), '12'))
-                return bet(call * 3);
-
-            return bet(call);
+        if(this.isConnected(this.cardToNumber(this.globals.firstCard), this.cardToNumber(this.globals.secondCard)) && this.isSuited(this.globals.firstSuit, this.globals.secondSuit)) {
+            if(this.betterThanOrEqual(this.max(this.globals.firstCard, this.globals.secondCard), '12'))
+                return bet(this.globals.call * 3);
         }
 
         // CheckOrFold tutto il resto
