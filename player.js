@@ -54,6 +54,10 @@ exports = module.exports = {
         return false;
     },
 
+    ifFlush : function() {
+
+    },
+
     isAssoKappa : function(a, b) {
         return ( (a === 'A') && (b === 'K') ) || ( (a === 'K') && (b === 'A') )
     },
@@ -160,8 +164,12 @@ exports = module.exports = {
             return this.globals.betAmount * 3;
         }
 
-        // Vado allin con AssoKappa
+        // Vado allin con AssoKappa suit, *3 con assokappa semplice
         if(this.isAssoKappa(this.globals.firstCard, this.globals.secondCard)) {
+            if(this.isSuited(this.globals.firstSuit, this.globals.secondSuit)) {
+                return this.globals.allInAmount;
+            }
+
             return this.globals.betAmount * 3;
         }
 
@@ -170,6 +178,10 @@ exports = module.exports = {
         if(this.isConnected(this.cardToNumber(this.globals.firstCard), this.cardToNumber(this.globals.secondCard)) && this.isSuited(this.globals.firstSuit, this.globals.secondSuit)) {
             if(this.betterThanOrEqual(this.max(this.globals.firstCard, this.globals.secondCard), '12'))
                 return this.globals.betAmount * 3;
+        }
+
+        if(this.isSuited(this.globals.firstSuit, this.globals.secondSuit)) {
+            return this.globals.callAmount;
         }
 
         // CheckOrFold tutto il resto
