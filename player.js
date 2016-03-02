@@ -67,7 +67,7 @@ exports = module.exports = {
     },
 
     isFlush : function() {
-        if(this.isSuited(this.globals.firstSuit, this.globals.secondSuit) && this.suitOccurrencyCount(this.globals.firstSuit) >= 2) {
+        if(this.isSuited(this.globals.firstSuit, this.globals.secondSuit) && (this.suitOccurrencyCount(this.globals.firstSuit) >= 2)) {
             return true;
         }
 
@@ -148,7 +148,8 @@ exports = module.exports = {
         pot : "",
         commonCards : "",
         call : "",
-        sb : ""
+        sb : "",
+        betAmount : ""
     },
 
     initGlobals : function(gamestate) {
@@ -182,14 +183,17 @@ exports = module.exports = {
     preflopBet : function() {
         // Vado allin con una coppia >= Q, altra coppia bet * 3
         if(this.isCouple(this.globals.firstCard, this.globals.secondCard)) {
-            if(this.betterThanOrEqual(this.cardToNumber(this.globals.firstCard), '12'))
-                return return this.globals.allInAmount;
+
+            if(this.betterThanOrEqual(this.cardToNumber(this.globals.firstCard), '12')) {
+                return this.globals.allInAmount;
+            }
 
             return this.globals.betAmount * 3;
         }
 
         // Vado allin con AssoKappa suit, *3 con assokappa semplice
         if(this.isAssoKappa(this.globals.firstCard, this.globals.secondCard)) {
+
             if(this.isSuited(this.globals.firstSuit, this.globals.secondSuit)) {
                 return this.globals.allInAmount;
             }
@@ -200,8 +204,9 @@ exports = module.exports = {
         // Bet * 3 con connector-suited > JQ
         // Call con connector-suited inferiori
         if(this.isConnected(this.cardToNumber(this.globals.firstCard), this.cardToNumber(this.globals.secondCard)) && this.isSuited(this.globals.firstSuit, this.globals.secondSuit)) {
-            if(this.betterThanOrEqual(this.max(this.globals.firstCard, this.globals.secondCard), '12'))
+            if(this.betterThanOrEqual(this.max(this.globals.firstCard, this.globals.secondCard), '12')) {
                 return this.globals.betAmount * 3;
+            }
         }
 
         if(this.isSuited(this.globals.firstSuit, this.globals.secondSuit)) {
