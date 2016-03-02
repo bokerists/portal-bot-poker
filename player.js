@@ -54,8 +54,34 @@ exports = module.exports = {
         return false;
     },
 
-    ifFlush : function() {
+    suitOccurrencyCount : function(a) {
+        var occurencyCount = 0;
 
+        for(var i = 0; i < this.globals.commonCards.length; i++) {
+            if(a === this.globals.commonCards[i].type) {
+                occurencyCount ++;
+            }
+        }
+
+        return occurencyCount;
+    },
+
+    isFlush : function() {
+        var isFlush = false;
+
+        if(this.isSuited(this.globals.firstSuit, this.globals.secondSuit) && this.suitOccurrencyCount(this.globals.firstSuit) >= 2) {
+            return true;
+        }
+
+        if(this.suitOccurrencyCount(this.globals.secondSuit) >= 3) {
+            return true;
+        }
+
+        if(this.suitOccurrencyCount(this.globals.firstSuit) >= 3) {
+            return true;
+        }
+
+        return isFlush;
     },
 
     isAssoKappa : function(a, b) {
@@ -195,6 +221,9 @@ exports = module.exports = {
         }
         //full all in;
         //colore all in
+        if(this.isFlush()) {
+            return this.globals.allInAmount;
+        }
 
         // tris * 3
         if(this.isTris()) {
